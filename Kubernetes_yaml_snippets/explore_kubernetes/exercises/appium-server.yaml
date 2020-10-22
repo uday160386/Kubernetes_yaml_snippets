@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: appium-android
+  labels:
+    name: appium-android
+spec:
+  containers:
+  - name: appium
+    image: appium/appium
+    env:
+    - name: CONNECT_TO_GRID
+      value: "true"
+    - name: APPIUM_HOST
+      value: "127.0.0.1"
+    - name: APPIUM_PORT
+      value: "4723"
+    - name: SELENIUM_HOST
+      value: "selenium-hub"
+    - name: SELENIUM_PORT
+      value: "4444" 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appium-android-svc
+  labels:
+    name: appium-android-svc
+spec:
+  selector:
+    app: appium-android
+  ports:
+    - name: web
+      protocol: TCP
+      port: 4444
+      targetPort: 4444
+    - name: node
+      protocol: TCP
+      port: 5555
+      targetPort: 5555
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appium-android
+  labels:
+    app: appium-android
+    name: appium-android
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appium-android
+  template:
+    metadata:
+      labels:
+        app: appium-android
+    spec:
+      containers:
+      - name: appium
+        image: appium/appium
+        env:
+        - name: CONNECT_TO_GRID
+          value: "true"
+        - name: APPIUM_HOST
+          value: "127.0.0.1"
+        - name: APPIUM_PORT
+          value: "4723"
+        - name: SELENIUM_HOST
+          value: "selenium-hub"
+        - name: SELENIUM_PORT
+          value: "4444"
+

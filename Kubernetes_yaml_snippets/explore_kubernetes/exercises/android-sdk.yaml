@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: udaystj-ns
+  name: android-sdk
+  labels:
+    name: android-sdk
+spec:
+  restartPolicy: Never
+  containers:
+  - name: android-sdk
+    image: androidsdk/android-29
+    command: [ "/bin/sh","/opt/android-sdk-linux/tools/sdkmanager --list", 
+               "/opt/android-sdk-linux/tools/avdmanager create avd -n first_avd --abi google_apis/x86_64 -k \"system-images;android-29;google_apis;x86_64\"",
+               "/opt/android-sdk-linux/tools/emulator -avd first_avd -no-window -no-audio &", 
+               "/opt/android-sdk-linux/platform-tools/adb devices"]
